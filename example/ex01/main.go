@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	hookfs "github.com/osrg/hookfs/hookfs"
+	"github.com/ethercflow/hookfs/hookfs"
 	log "github.com/sirupsen/logrus"
 )
 

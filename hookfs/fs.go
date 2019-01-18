@@ -50,36 +50,79 @@ func (h *HookFs) SetDebug(debug bool) {
 
 // GetAttr implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) GetAttr(name string, context *fuse.Context) (*fuse.Attr, fuse.Status) {
+	log.WithFields(log.Fields{
+		"name": name,
+		"h":    h,
+	}).Trace("fs.GetAttr")
+
 	return h.fs.GetAttr(name, context)
 }
 
 // Chmod implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) Chmod(name string, mode uint32, context *fuse.Context) fuse.Status {
+	log.WithFields(log.Fields{
+		"name": name,
+		"mode": mode,
+		"h":    h,
+	}).Trace("fs.Chmod")
+
 	return h.fs.Chmod(name, mode, context)
 }
 
 // Chown implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) Chown(name string, uid uint32, gid uint32, context *fuse.Context) fuse.Status {
+	log.WithFields(log.Fields{
+		"name": name,
+		"uid":  uid,
+		"gid":  gid,
+		"h":    h,
+	}).Trace("fs.Chown")
+
 	return h.fs.Chown(name, uid, gid, context)
 }
 
 // Utimens implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) Utimens(name string, Atime *time.Time, Mtime *time.Time, context *fuse.Context) fuse.Status {
+	log.WithFields(log.Fields{
+		"name":  name,
+		"atime": Atime,
+		"mtime": Mtime,
+		"h":     h,
+	}).Trace("fs.Utimens")
+
 	return h.fs.Utimens(name, Atime, Mtime, context)
 }
 
 // Truncate implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) Truncate(name string, size uint64, context *fuse.Context) fuse.Status {
+	log.WithFields(log.Fields{
+		"name": name,
+		"size": size,
+		"h":    h,
+	}).Trace("fs.Truncate")
+
 	return h.fs.Truncate(name, size, context)
 }
 
 // Access implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) Access(name string, mode uint32, context *fuse.Context) fuse.Status {
+	log.WithFields(log.Fields{
+		"name": name,
+		"mode": mode,
+		"h":    h,
+	}).Trace("fs.Access")
+
 	return h.fs.Access(name, mode, context)
 }
 
 // Link implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) Link(oldName string, newName string, context *fuse.Context) fuse.Status {
+	log.WithFields(log.Fields{
+		"oldName": oldName,
+		"newName": newName,
+		"h":       h,
+	}).Trace("fs.Link")
+
 	return h.fs.Link(oldName, newName, context)
 }
 
@@ -89,6 +132,12 @@ func (h *HookFs) Mkdir(name string, mode uint32, context *fuse.Context) fuse.Sta
 	var prehookErr, posthookErr error
 	var prehooked, posthooked bool
 	var prehookCtx HookContext
+
+	log.WithFields(log.Fields{
+		"name": name,
+		"mode": mode,
+		"h":    h,
+	}).Trace("fs.Mkdir")
 
 	if hookEnabled {
 		prehooked, prehookCtx, prehookErr = hook.PreMkdir(name, mode)
@@ -126,11 +175,24 @@ func (h *HookFs) Mkdir(name string, mode uint32, context *fuse.Context) fuse.Sta
 
 // Mknod implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) Mknod(name string, mode uint32, dev uint32, context *fuse.Context) fuse.Status {
+	log.WithFields(log.Fields{
+		"name": name,
+		"mode": mode,
+		"dev":  dev,
+		"h":    h,
+	}).Trace("fs.Mknod")
+
 	return h.fs.Mknod(name, mode, dev, context)
 }
 
 // Rename implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) Rename(oldName string, newName string, context *fuse.Context) fuse.Status {
+	log.WithFields(log.Fields{
+		"oldName": oldName,
+		"newName": newName,
+		"h":       h,
+	}).Trace("fs.Rename")
+
 	return h.fs.Rename(oldName, newName, context)
 }
 
@@ -140,6 +202,11 @@ func (h *HookFs) Rmdir(name string, context *fuse.Context) fuse.Status {
 	var prehookErr, posthookErr error
 	var prehooked, posthooked bool
 	var prehookCtx HookContext
+
+	log.WithFields(log.Fields{
+		"name": name,
+		"h":    h,
+	}).Trace("fs.Rmdir")
 
 	if hookEnabled {
 		prehooked, prehookCtx, prehookErr = hook.PreRmdir(name)
@@ -177,31 +244,65 @@ func (h *HookFs) Rmdir(name string, context *fuse.Context) fuse.Status {
 
 // Unlink implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) Unlink(name string, context *fuse.Context) fuse.Status {
+	log.WithFields(log.Fields{
+		"name": name,
+		"h":    h,
+	}).Trace("fs.Unlink")
+
 	return h.fs.Unlink(name, context)
 }
 
 // GetXAttr implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) GetXAttr(name string, attribute string, context *fuse.Context) ([]byte, fuse.Status) {
+	log.WithFields(log.Fields{
+		"name":      name,
+		"attribute": attribute,
+		"h":         h,
+	}).Trace("fs.CetXAttr")
+
 	return h.fs.GetXAttr(name, attribute, context)
 }
 
 // ListXAttr implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) ListXAttr(name string, context *fuse.Context) ([]string, fuse.Status) {
+	log.WithFields(log.Fields{
+		"name": name,
+		"h":    h,
+	}).Trace("fs.ListXAttr")
+
 	return h.fs.ListXAttr(name, context)
 }
 
 // RemoveXAttr implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) RemoveXAttr(name string, attr string, context *fuse.Context) fuse.Status {
+	log.WithFields(log.Fields{
+		"name": name,
+		"attr": attr,
+		"h":    h,
+	}).Trace("fs.RemoveXAttr")
+
 	return h.fs.RemoveXAttr(name, attr, context)
 }
 
 // SetXAttr implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) SetXAttr(name string, attr string, data []byte, flags int, context *fuse.Context) fuse.Status {
+	log.WithFields(log.Fields{
+		"name":  name,
+		"attr":  attr,
+		"data":  data,
+		"flags": flags,
+		"h":     h,
+	}).Trace("fs.SetXAttr")
+
 	return h.fs.SetXAttr(name, attr, data, flags, context)
 }
 
 // OnMount implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) OnMount(nodeFs *pathfs.PathNodeFs) {
+	log.WithFields(log.Fields{
+		"h": h,
+	}).Trace("fs.OnMount")
+
 	h.fs.OnMount(nodeFs)
 	hook, hookEnabled := h.hook.(HookWithInit)
 	if hookEnabled {
@@ -216,6 +317,10 @@ func (h *HookFs) OnMount(nodeFs *pathfs.PathNodeFs) {
 
 // OnUnmount implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) OnUnmount() {
+	log.WithFields(log.Fields{
+		"h": h,
+	}).Trace("fs.OnUnmount")
+
 	h.fs.OnUnmount()
 }
 
@@ -225,6 +330,12 @@ func (h *HookFs) Open(name string, flags uint32, context *fuse.Context) (nodefs.
 	var prehookErr, posthookErr error
 	var prehooked, posthooked bool
 	var prehookCtx HookContext
+
+	log.WithFields(log.Fields{
+		"name":  name,
+		"flags": flags,
+		"h":     h,
+	}).Trace("fs.Open")
 
 	if hookEnabled {
 		prehooked, prehookCtx, prehookErr = hook.PreOpen(name, flags)
@@ -267,6 +378,13 @@ func (h *HookFs) Open(name string, flags uint32, context *fuse.Context) (nodefs.
 
 // Create implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) Create(name string, flags uint32, mode uint32, context *fuse.Context) (nodefs.File, fuse.Status) {
+	log.WithFields(log.Fields{
+		"name":  name,
+		"flags": flags,
+		"mode":  mode,
+		"h":     h,
+	}).Trace("fs.Create")
+
 	lowerFile, lowerCode := h.fs.Create(name, flags, mode, context)
 	hFile, hErr := newHookFile(lowerFile, name, h.hook)
 	if hErr != nil {
@@ -281,6 +399,11 @@ func (h *HookFs) OpenDir(name string, context *fuse.Context) ([]fuse.DirEntry, f
 	var prehookErr, posthookErr error
 	var prehooked, posthooked bool
 	var prehookCtx HookContext
+
+	log.WithFields(log.Fields{
+		"name": name,
+		"h":    h,
+	}).Trace("fs.OpenDir")
 
 	if hookEnabled {
 		prehooked, prehookCtx, prehookErr = hook.PreOpenDir(name)
@@ -318,16 +441,32 @@ func (h *HookFs) OpenDir(name string, context *fuse.Context) ([]fuse.DirEntry, f
 
 // Symlink implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) Symlink(value string, linkName string, context *fuse.Context) fuse.Status {
+	log.WithFields(log.Fields{
+		"value":    value,
+		"linkName": linkName,
+		"h":        h,
+	}).Trace("fs.Symlink")
+
 	return h.fs.Symlink(value, linkName, context)
 }
 
 // Readlink implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) Readlink(name string, context *fuse.Context) (string, fuse.Status) {
+	log.WithFields(log.Fields{
+		"name": name,
+		"h":    h,
+	}).Trace("fs.Readlink")
+
 	return h.fs.Readlink(name, context)
 }
 
 // StatFs implements hanwen/go-fuse/fuse/pathfs.FileSystem. You are not expected to call h manually.
 func (h *HookFs) StatFs(name string) *fuse.StatfsOut {
+	log.WithFields(log.Fields{
+		"name": name,
+		"h":    h,
+	}).Trace("fs.StatFs")
+
 	return h.fs.StatFs(name)
 }
 

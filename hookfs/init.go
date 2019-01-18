@@ -31,8 +31,11 @@ func SetLogLevel(newLevel int) {
 	}
 
 	logLevel = newLevel
-	if logLevel > 0 {
+	switch logLevel {
+	case 1:
 		log.SetLevel(log.DebugLevel)
+	case 2:
+		log.SetLevel(log.TraceLevel)
 	}
 }
 

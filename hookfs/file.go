@@ -272,7 +272,7 @@ func (h *hookFile) Truncate(size uint64) fuse.Status {
 
 	lowerCode := h.file.Truncate(size)
 	if hookEnabled {
-		posthooked, posthookErr = hook.PostTruncate(prehookCtx)
+		posthooked, posthookErr = hook.PostTruncate(int32(lowerCode), prehookCtx)
 		if posthooked {
 			log.WithFields(log.Fields{
 				"h":           h,
@@ -298,7 +298,7 @@ func (h *hookFile) GetAttr(out *fuse.Attr) fuse.Status {
 	}).Trace("f.GetAttr")
 
 	if hookEnabled {
-		prehooked, prehookCtx, prehookErr = hook.PreGetAttr(h.name, out)
+		prehooked, prehookCtx, prehookErr = hook.PreGetAttr(h.name)
 		if prehooked {
 			log.WithFields(log.Fields{
 				"h":          h,
@@ -311,7 +311,7 @@ func (h *hookFile) GetAttr(out *fuse.Attr) fuse.Status {
 
 	lowerCode := h.file.GetAttr(out)
 	if hookEnabled {
-		posthooked, posthookErr = hook.PostGetAttr(prehookCtx)
+		posthooked, posthookErr = hook.PostGetAttr(int32(lowerCode), prehookCtx)
 		if posthooked {
 			log.WithFields(log.Fields{
 				"h":           h,
@@ -351,7 +351,7 @@ func (h *hookFile) Chown(uid uint32, gid uint32) fuse.Status {
 
 	lowerCode := h.file.Chown(uid, gid)
 	if hookEnabled {
-		posthooked, posthookErr = hook.PostChown(prehookCtx)
+		posthooked, posthookErr = hook.PostChown(int32(lowerCode), prehookCtx)
 		if posthooked {
 			log.WithFields(log.Fields{
 				"h":           h,
@@ -390,7 +390,7 @@ func (h *hookFile) Chmod(perms uint32) fuse.Status {
 
 	lowerCode := h.file.Chmod(perms)
 	if hookEnabled {
-		posthooked, posthookErr = hook.PostChmod(prehookCtx)
+		posthooked, posthookErr = hook.PostChmod(int32(lowerCode), prehookCtx)
 		if posthooked {
 			log.WithFields(log.Fields{
 				"h":           h,
@@ -430,7 +430,7 @@ func (h *hookFile) Utimens(atime *time.Time, mtime *time.Time) fuse.Status {
 
 	lowerCode := h.file.Utimens(atime, mtime)
 	if hookEnabled {
-		posthooked, posthookErr = hook.PostUtimens(prehookCtx)
+		posthooked, posthookErr = hook.PostUtimens(int32(lowerCode), prehookCtx)
 		if posthooked {
 			log.WithFields(log.Fields{
 				"h":           h,
@@ -471,7 +471,7 @@ func (h *hookFile) Allocate(off uint64, size uint64, mode uint32) fuse.Status {
 
 	lowerCode := h.file.Allocate(off, size, mode)
 	if hookEnabled {
-		posthooked, posthookErr = hook.PostAllocate(prehookCtx)
+		posthooked, posthookErr = hook.PostAllocate(int32(lowerCode), prehookCtx)
 		if posthooked {
 			log.WithFields(log.Fields{
 				"h":           h,
@@ -513,7 +513,7 @@ func (h *hookFile) GetLk(owner uint64, lk *fuse.FileLock, flags uint32, out *fus
 
 	lowerCode := h.file.GetLk(owner, lk, flags, out)
 	if hookEnabled {
-		posthooked, posthookErr = hook.PostGetLk(prehookCtx)
+		posthooked, posthookErr = hook.PostGetLk(int32(lowerCode), prehookCtx)
 		if posthooked {
 			log.WithFields(log.Fields{
 				"h":           h,
@@ -554,7 +554,7 @@ func (h *hookFile) SetLk(owner uint64, lk *fuse.FileLock, flags uint32) fuse.Sta
 
 	lowerCode := h.file.SetLk(owner, lk, flags)
 	if hookEnabled {
-		posthooked, posthookErr = hook.PostSetLk(prehookCtx)
+		posthooked, posthookErr = hook.PostSetLk(int32(lowerCode), prehookCtx)
 		if posthooked {
 			log.WithFields(log.Fields{
 				"h":           h,
@@ -595,7 +595,7 @@ func (h *hookFile) SetLkw(owner uint64, lk *fuse.FileLock, flags uint32) fuse.St
 
 	lowerCode := h.file.SetLkw(owner, lk, flags)
 	if hookEnabled {
-		posthooked, posthookErr = hook.PostSetLkw(prehookCtx)
+		posthooked, posthookErr = hook.PostSetLkw(int32(lowerCode), prehookCtx)
 		if posthooked {
 			log.WithFields(log.Fields{
 				"h":           h,

@@ -1,8 +1,9 @@
 package hookfs
 
 import (
-	"github.com/hanwen/go-fuse/fuse"
 	"time"
+
+	"github.com/hanwen/go-fuse/fuse"
 )
 
 // Hook is the base interface for user-written hooks.
@@ -85,61 +86,152 @@ type HookOnRelease interface {
 type HookOnTruncate interface {
 	// if hooked is true, the real release() would not be called
 	PreTruncate(path string, size uint64) (hooked bool, ctx HookContext, err error)
-	PostTruncate(prehookCtx HookContext) (hooked bool, err error)
+	PostTruncate(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
 }
 
 // HookOn is called on getattr. This also implements Hook.
 type HookOnGetAttr interface {
 	// if hooked is true, the real getattr() would not be called
-	PreGetAttr(path string, out *fuse.Attr) (hooked bool, ctx HookContext, err error)
-	PostGetAttr(prehookCtx HookContext) (hooked bool, err error)
+	PreGetAttr(path string) (hooked bool, ctx HookContext, err error)
+	PostGetAttr(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
 }
 
 // HookOn is called on chown. This also implements Hook.
 type HookOnChown interface {
 	// if hooked is true, the real chown() would not be called
 	PreChown(path string, uid uint32, gid uint32) (hooked bool, ctx HookContext, err error)
-	PostChown(prehookCtx HookContext) (hooked bool, err error)
+	PostChown(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
 }
 
 // HookOn is called on chmod. This also implements Hook.
 type HookOnChmod interface {
 	// if hooked is true, the real chmod() would not be called
 	PreChmod(path string, perms uint32) (hooked bool, ctx HookContext, err error)
-	PostChmod(prehookCtx HookContext) (hooked bool, err error)
+	PostChmod(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
 }
 
 // HookOn is called on chmod. This also implements Hook.
 type HookOnUtimens interface {
 	// if hooked is true, the real utimens() would not be called
 	PreUtimens(path string, atime *time.Time, mtime *time.Time) (hooked bool, ctx HookContext, err error)
-	PostUtimens(prehookCtx HookContext) (hooked bool, err error)
+	PostUtimens(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
 }
 
 // HookOn is called on allocate. This also implements Hook.
 type HookOnAllocate interface {
 	// if hooked is true, the real allocate() would not be called
 	PreAllocate(path string, off uint64, size uint64, mode uint32) (hooked bool, ctx HookContext, err error)
-	PostAllocate(prehookCtx HookContext) (hooked bool, err error)
+	PostAllocate(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
 }
 
 // HookOn is called on getlk. This also implements Hook.
 type HookOnGetLk interface {
 	// if hooked is true, the real getlk() would not be called
 	PreGetLk(path string, owner uint64, lk *fuse.FileLock, flags uint32, out *fuse.FileLock) (hooked bool, ctx HookContext, err error)
-	PostGetLk(prehookCtx HookContext) (hooked bool, err error)
+	PostGetLk(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
 }
 
 // HookOn is called on setlk. This also implements Hook.
 type HookOnSetLk interface {
 	// if hooked is true, the real setlk() would not be called
 	PreSetLk(path string, owner uint64, lk *fuse.FileLock, flags uint32) (hooked bool, ctx HookContext, err error)
-	PostSetLk(prehookCtx HookContext) (hooked bool, err error)
+	PostSetLk(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
 }
 
 // HookOn is called on setlkm. This also implements Hook.
 type HookOnSetLkw interface {
-	// if hooked is true, the real setlkm() would not be called
+	// if hooked is true, the real setlkw() would not be called
 	PreSetLkw(path string, owner uint64, lk *fuse.FileLock, flags uint32) (hooked bool, ctx HookContext, err error)
-	PostSetLkw(prehookCtx HookContext) (hooked bool, err error)
+	PostSetLkw(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on statfs. This also implements Hook.
+type HookOnStatFs interface {
+	// if hooked is true, the real statfs) would not be called
+	PreStatFs(path string) (hooked bool, ctx HookContext, err error)
+	PostStatFs(prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on readlink. This also implements Hook.
+type HookOnReadlink interface {
+	// if hooked is true, the real readlink() would not be called
+	PreReadlink(name string) (hooked bool, ctx HookContext, err error)
+	PostReadlink(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on symink. This also implements Hook.
+type HookOnSymlink interface {
+	// if hooked is true, the real symlink() would not be called
+	PreSymlink(value string, linkName string) (hooked bool, ctx HookContext, err error)
+	PostSymlink(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on create. This also implements Hook.
+type HookOnCreate interface {
+	// if hooked is true, the real create() would not be called
+	PreCreate(name string, flags uint32, mode uint32) (hooked bool, ctx HookContext, err error)
+	PostCreate(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on access. This also implements Hook.
+type HookOnAccess interface {
+	// if hooked is true, the real access() would not be called
+	PreAccess(name string, mode uint32) (hooked bool, ctx HookContext, err error)
+	PostAccess(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on link. This also implements Hook.
+type HookOnLink interface {
+	// if hooked is true, the real link() would not be called
+	PreLink(oldName string, newName string) (hooked bool, ctx HookContext, err error)
+	PostLink(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on mknod. This also implements Hook.
+type HookOnMknod interface {
+	// if hooked is true, the real mknod() would not be called
+	PreMknod(name string, mode uint32, dev uint32) (hooked bool, ctx HookContext, err error)
+	PostMknod(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on rename. This also implements Hook.
+type HookOnRename interface {
+	// if hooked is true, the real rename() would not be called
+	PreRename(oldName string, newName string) (hooked bool, ctx HookContext, err error)
+	PostRename(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on unlink. This also implements Hook.
+type HookOnUnlink interface {
+	// if hooked is true, the real rename() would not be called
+	PreUnlink(name string) (hooked bool, ctx HookContext, err error)
+	PostUnlink(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on getxattr. This also implements Hook.
+type HookOnGetXAttr interface {
+	// if hooked is true, the real getxattr() would not be called
+	PreGetXAttr(name string, attribute string) (hooked bool, ctx HookContext, err error)
+	PostGetXAttr(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on listxattr. This also implements Hook.
+type HookOnListXAttr interface {
+	// if hooked is true, the real listxattr() would not be called
+	PreListXAttr(name string) (hooked bool, ctx HookContext, err error)
+	PostListXAttr(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on removeattr. This also implements Hook.
+type HookOnRemoveXAttr interface {
+	// if hooked is true, the real removexattr() would not be called
+	PreRemoveXAttr(name string, attr string) (hooked bool, ctx HookContext, err error)
+	PostRemoveXAttr(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
+}
+
+// HookOn is called on setxattr. This also implements Hook.
+type HookOnSetXAttr interface {
+	// if hooked is true, the real setxattr() would not be called
+	PreSetXAttr(name string, attr string, data []byte, flags int) (hooked bool, ctx HookContext, err error)
+	PostSetXAttr(realRetCode int32, prehookCtx HookContext) (hooked bool, err error)
 }
